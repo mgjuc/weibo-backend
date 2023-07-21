@@ -1,3 +1,7 @@
+/**
+ * mongoose的测试程序
+ */
+
 const mongoose = require('mongoose')
 
 const url = "mongodb://root:root@localhost:27017/?authSource=admin"

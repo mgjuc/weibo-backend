@@ -1,5 +1,5 @@
 {
-  "name": "wbbackend",
+  "name": "weibo-backend",
   "version": "1.0.0",
   "description": "微博后端",
   "main": "index.js",
