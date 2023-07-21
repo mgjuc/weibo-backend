@@ -8,6 +8,14 @@ const jwt = require('jsonwebtoken')
 usersRouter.post('/', async (req, resp) => {
     const body = req.body
     // console.log(body)
+
+    const hasuser = await User.findOne({username: body.username})
+    if(hasuser) return resp.json({
+        msg: "该用户已存在",
+        code: 2000
+    });
+
+    //加盐：防止彩虹表功击
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
