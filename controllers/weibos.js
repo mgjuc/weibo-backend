@@ -26,7 +26,15 @@ weiboRouter.get('/', (req, resp, next) => {
  */
 weiboRouter.get('/page/:index', (req, resp, next) => {
     // resp.json(contentlist)
-    let total = Weibo.find({}).count()
+    let total
+    Weibo.find({}).count((err, count) =>{
+        if(err){
+            next(err)
+        }
+        else{
+            total = count
+        }
+    })
     Weibo.find({}).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
         resp.json({
             code: 1000,
@@ -43,9 +51,13 @@ weiboRouter.get('/page/:index', (req, resp, next) => {
 weiboRouter.put('/:id', async (req, resp, next) => {
     validateUser(req, resp)
 
-    Weibo.findByIdAndUpdate(req.params.id, { 'content': req.body.content })
+    Weibo.findByIdAndUpdate(req.params.id, { content: req.body.content })
         .then(p => {
-            resp.json(p)
+            resp.json({
+                code: 1000,
+                msg: 'success',
+                data: p
+            })
         })
         .catch(error => {
             next(error)
@@ -72,7 +84,7 @@ weiboRouter.get('/:id', (req, resp, next) => {
  * 通过ID删除
  */
 weiboRouter.delete('/:id', (req, resp, next) => {
-    validateUser(req, resp)
+    validateUser(req, resp);
 
     const id = Number(req.params.id)
     // contentlist = contentlist.filter(p => p.id !== id)
@@ -87,7 +99,7 @@ weiboRouter.delete('/:id', (req, resp, next) => {
 * 增加单条数据
 */
 weiboRouter.post('/', async (req, resp, next) => {
-    validateUser(req, resp);
+    let decodedToken = validateUser(req, resp);
 
     const user = await User.findById(decodedToken.id)
     const data = req.body
@@ -128,6 +140,7 @@ const validateUser = (req, resp) => {
     if (!decodedToken.id) {
         return resp.status(400).json({ error: 'content or userinfo missing' })
     }
+    return decodedToken
 }
 
 module.exports = weiboRouter
