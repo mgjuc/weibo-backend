@@ -1,0 +1,19 @@
+GET Http://localhost:3001/api/contentlist HTTP/1.1
+
+###
+GET Http://localhost:3001/api/contentlist/1 HTTP/1.1
+
+
+###
+DELETE Http://localhost:3001/api/contentlist/1 HTTP/1.1
+
+###
+POST Http://localhost:3001/api/contentlist HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IuaenOmFsSIsImlkIjoiNjIzMWZhYTc0NjM2YjVhZmM3NzA5ZWIxIiwiaWF0IjoxNjQ3NTkzMjUyfQ.9rzmF4jdg_JoqY9c-sh3RqQhlEdpG9lrhOmao3A_NtE
+
+
+{
+    "content": "再来123",
+    "userId": "6231faa74636b5afc7709eb1"
+}

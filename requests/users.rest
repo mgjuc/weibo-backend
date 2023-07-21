@@ -1,0 +1,35 @@
+###
+GET Http://localhost:3001/api/users HTTP/1.1
+
+###
+POST Http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "盐果酱",
+    "password": "password"
+}
+
+//6231faa74636b5afc7709eb1
+
+###
+POST Http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "盐果酱",
+    "password": "password"
+}
+
+
+###
+POST Http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin888",
+    "password": "password"
+}
+
+###
+GET Http://localhost:3001/api/users HTTP/1.1
