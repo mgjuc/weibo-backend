@@ -34,7 +34,15 @@ usersRouter.post('/', async (req, resp) => {
 
     const token = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 60*60})    //expiresIn过期是时间
 
-    resp.json({ token, username: user.username, name: user.name })
+    resp.json({
+        code: 1000,
+        msg: 'success',
+        data: {
+            token, 
+            username: user.username, 
+            name: user.name
+        }
+    })
 })
 
 //查询所有用户
