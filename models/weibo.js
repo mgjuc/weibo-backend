@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 //开发时在.env文件，发布在docker定义环境变量
 const url = process.env.MONGODB_URI
 
-console.log('connecting to mongodb')
+console.log('connecting to mongodb:', url)
 
 /**
  * 建立数据库连接

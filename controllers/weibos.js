@@ -26,9 +26,8 @@ weiboRouter.get('/', (req, resp, next) => {
  */
 weiboRouter.get('/page/:index', (req, resp, next) => {
     // resp.json(contentlist)
-    let query = Weibo.find({})
-    let total = query.count()
-    query.sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
+    let total = Weibo.find({}).count()
+    Weibo.find({}).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
         resp.json({
             code: 1000,
             msg: 'success',
