@@ -55,4 +55,45 @@ usersRouter.get('/', async (req, resp) => {
     })
 })
 
+/** 修改用户头像 */
+usersRouter.put('/', async (req, resp) => {
+    const body = req.body
+    let token = validateUser(req, resp);
+    //只允许改自己的
+    // if(token.id != body.id){
+    //     return resp.json({
+    //         code: 2000,
+    //         msg: '权限不足'
+    //     })
+    // }
+    const user = await User.findByIdAndUpdate(token.id, {headUrl: body.headUrl})
+    resp.json({
+        code: 1000,
+        msg: 'success',
+        data: user,
+    })
+})
+
+const getToken = request => {
+    const authorization = request.get('authorization')
+    console.log(authorization)
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7)
+    }
+}
+
+const validateUser = (req, resp) => {
+    const token = getToken(req)
+    //用私钥验证Token，并解析出Token绑定的值
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    //Token绑定的值
+    if (!decodedToken.id) {
+        return resp.status(400).json({ 
+            code: 2000,
+            msg: 'content or userinfo missing' 
+        })
+    }
+    return decodedToken
+}
+
 module.exports = usersRouter

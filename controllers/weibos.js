@@ -2,6 +2,7 @@ const Weibo = require('../models/weibo')
 const weiboRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const mongoose = require('mongoose')
 
 const getToken = request => {
     const authorization = request.get('authorization')
@@ -55,9 +56,12 @@ weiboRouter.get('/page/:index', (req, resp, next) => {
  * 修改微博
  */
 weiboRouter.put('/:id', async (req, resp, next) => {
-    validateUser(req, resp)
-
-    Weibo.findByIdAndUpdate(req.params.id, { content: req.body.content })
+    let body = req.body
+    let token = validateUser(req, resp)
+    //重要：find()里匹配_id，必须转成ObjectId格式，并且是
+    let wid = new mongoose.Types.ObjectId(req.params.id);
+    let uid = new mongoose.Types.ObjectId(token.id);
+    Weibo.findOneAndUpdate( { _id: wid, userId: uid }, { content: body.content })
         .then(p => {
             resp.json({
                 code: 1000,
@@ -152,9 +156,9 @@ const validateUser = (req, resp) => {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     //Token绑定的值
     if (!decodedToken.id) {
-        return resp.status(400).json({ 
+        return resp.status(400).json({
             code: 2000,
-            msg: 'content or userinfo missing' 
+            msg: 'content or userinfo missing'
         })
     }
     return decodedToken
