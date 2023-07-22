@@ -23,16 +23,20 @@ loginRouter.post('/', async (req, resp) => {
         username: user.username,
         id: user._id,
     }
+    user.lastlogin = new Date()
+    User.findByIdAndUpdate(user.id, { lastlogin: user.lastlogin })
 
-    const token = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 60*60})
+    const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 })
     console.log(`${user.username}已登录`)
     resp.status(200).send({
         code: 1000,
         msg: 'success',
-        data: { 
-            token, 
-            username: user.username, 
-            name: user.name 
+        data: {
+            token,
+            username: user.username,
+            name: user.name,
+            headUrl: user.headUrl,
+            lastlogin: user.lastlogin
         }
     })
 })

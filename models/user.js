@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
             ref: 'Weibo'
         }
     ],
+    headUrl: String,
+    lastlogin: Date,
 })
 
 // userSchema.plugin(uniqueValidator)    //mongoose数据校验插件

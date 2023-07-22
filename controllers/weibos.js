@@ -61,7 +61,7 @@ weiboRouter.put('/:id', async (req, resp, next) => {
     //重要：find()里匹配_id，必须转成ObjectId格式，并且是
     let wid = new mongoose.Types.ObjectId(req.params.id);
     let uid = new mongoose.Types.ObjectId(token.id);
-    Weibo.findOneAndUpdate( { _id: wid, userId: uid }, { content: body.content })
+    Weibo.findOneAndUpdate({ _id: wid, userId: uid }, { content: body.content })
         .then(p => {
             resp.json({
                 code: 1000,
@@ -124,7 +124,7 @@ weiboRouter.post('/', async (req, resp, next) => {
         content: data.content,
         time: new Date(),
         auther: user.username,
-        userId: user._id
+        userId: user._id,
     })
     // resp.json(data) //一定要处理返回,不然停不下来
     weibo.save()

@@ -32,7 +32,7 @@ const reqdetail = (req, resp, nest) => {
  * @returns 
  */
 const errorHandler = (error, request, response, next) => {
-    console.log('errorHandler', error.message)
+    console.log('errorHandler', error.name)
 
     if (error.name === 'CastError' && error.kind === 'ObjectId') {
         return response.status(400).send({
@@ -41,12 +41,18 @@ const errorHandler = (error, request, response, next) => {
         })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({
-            error: error.message
+            code: 2000,
+            msg: error.message
         })
     } else if (error.name === 'JsonWebTokenError') {
         return response.status(401).json({
             code: 2000,
-            msg: 'invalid token'
+            msg: 'Token 无效'
+        })
+    } else if (error.name === 'TokenExpiredError'){
+        return response.status(401).json({
+            code: 2000,
+            msg: 'Token已过期'
         })
     }
     next(error)
