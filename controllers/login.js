@@ -13,8 +13,9 @@ loginRouter.post('/', async (req, resp) => {
         : await bcrypt.compare(body.password, user.passwordHash)
 
     if (!(user && passwordCorrect)) {
-        return resp.status(401).json({
-            error: '用户名或密码错误'
+        return resp.status(200).json({
+            code: 2000,
+            msg: '用户名或密码错误',
         })
     }
 
@@ -25,7 +26,15 @@ loginRouter.post('/', async (req, resp) => {
 
     const token = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 60*60})
     console.log(`${user.username}已登录`)
-    resp.status(200).send({ token, username: user.username, name: user.name })
+    resp.status(200).send({
+        code: 1000,
+        msg: 'success',
+        data: { 
+            token, 
+            username: user.username, 
+            name: user.name 
+        }
+    })
 })
 
 

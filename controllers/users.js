@@ -48,7 +48,11 @@ usersRouter.post('/', async (req, resp) => {
 //查询所有用户
 usersRouter.get('/', async (req, resp) => {
     const users = await User.find({})
-    resp.json(users)
+    resp.json({
+        code: 1000,
+        msg: 'success',
+        data: users,
+    })
 })
 
 module.exports = usersRouter

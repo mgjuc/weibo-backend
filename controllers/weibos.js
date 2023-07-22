@@ -17,7 +17,11 @@ const getToken = request => {
 weiboRouter.get('/', (req, resp, next) => {
     // resp.json(contentlist)
     Weibo.find({}).then(p => {
-        resp.json(p)
+        resp.json({
+            code: 1000,
+            msg: 'success',
+            data: p
+        })
     }).catch(error => next(error))
 })
 
@@ -27,11 +31,11 @@ weiboRouter.get('/', (req, resp, next) => {
 weiboRouter.get('/page/:index', (req, resp, next) => {
     // resp.json(contentlist)
     let total
-    Weibo.find({}).count((err, count) =>{
-        if(err){
+    Weibo.find({}).count((err, count) => {
+        if (err) {
             next(err)
         }
-        else{
+        else {
             total = count
         }
     })
@@ -39,8 +43,10 @@ weiboRouter.get('/page/:index', (req, resp, next) => {
         resp.json({
             code: 1000,
             msg: 'success',
-            total: total,
-            data: p
+            data: {
+                total,
+                list: p
+            }
         })
     }).catch(error => next(error))
 })
@@ -73,7 +79,11 @@ weiboRouter.get('/:id', (req, resp, next) => {
     // const article = contentlist.find(p => p.id === id)
     Weibo.findById(req.params.id)
         .then(p => {
-            resp.json(p)
+            resp.json({
+                code: 1000,
+                msg: 'success',
+                data: p
+            })
         })
         .catch(err => {
             next(err)
@@ -118,7 +128,11 @@ weiboRouter.post('/', async (req, resp, next) => {
             console.log('saved weibo')
             user.weibos = user.weibos.concat(p._id)
             user.save()
-            resp.json(p)
+            resp.json({
+                code: 1000,
+                msg: 'success',
+                data: p
+            })
         }).then(p => console.log('update weiboid in user'))
         .catch(error => {
             next(error) //异常必须要调用next,否则请求没人被处理
@@ -138,7 +152,10 @@ const validateUser = (req, resp) => {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     //Token绑定的值
     if (!decodedToken.id) {
-        return resp.status(400).json({ error: 'content or userinfo missing' })
+        return resp.status(400).json({ 
+            code: 2000,
+            msg: 'content or userinfo missing' 
+        })
     }
     return decodedToken
 }
