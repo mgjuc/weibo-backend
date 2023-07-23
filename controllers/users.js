@@ -34,7 +34,7 @@ usersRouter.post('/', async (req, resp) => {
 
     const token = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 60*60})    //expiresIn过期是时间
 
-    resp.json({
+    return resp.json({
         code: 1000,
         msg: 'success',
         data: {
@@ -58,6 +58,12 @@ usersRouter.get('/', async (req, resp) => {
 /** 修改用户头像 */
 usersRouter.put('/', async (req, resp) => {
     const body = req.body
+    if(!body.headUrl) {
+        return resp.json({
+            code: 2000,
+            msg: 'headUrl为空'
+        })
+    }
     let token = validateUser(req, resp);
     //只允许改自己的
     // if(token.id != body.id){
@@ -66,8 +72,10 @@ usersRouter.put('/', async (req, resp) => {
     //         msg: '权限不足'
     //     })
     // }
+    // console.log('修改头像', token.id, body)
+    // 注意区分大小写
     const user = await User.findByIdAndUpdate(token.id, {headUrl: body.headUrl})
-    resp.json({
+    return resp.json({
         code: 1000,
         msg: 'success',
         data: user,
