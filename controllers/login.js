@@ -38,7 +38,8 @@ loginRouter.post('/', async (req, resp) => {
             username: user.username,
             name: user.name,
             headUrl: user.headUrl,
-            lastlogin: lastlogin
+            lastlogin: lastlogin,
+            expire: user.lastlogin.getTime() + 60 * 60 * 1000
         }
     })
 })
