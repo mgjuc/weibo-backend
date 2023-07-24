@@ -23,6 +23,7 @@ loginRouter.post('/', async (req, resp) => {
         username: user.username,
         id: user._id,
     }
+    let lastlogin = user.lastlogin
     user.lastlogin = new Date()
     User.findByIdAndUpdate(user.id, { lastlogin: user.lastlogin })
 
@@ -36,7 +37,7 @@ loginRouter.post('/', async (req, resp) => {
             username: user.username,
             name: user.name,
             headUrl: user.headUrl,
-            lastlogin: user.lastlogin
+            lastlogin: lastlogin
         }
     })
 })
