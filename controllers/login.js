@@ -25,11 +25,12 @@ loginRouter.post('/', async (req, resp) => {
     }
     let lastlogin = user.lastlogin
     user.lastlogin = new Date()
-    User.findByIdAndUpdate(user.id, { lastlogin: user.lastlogin })
+    await User.findByIdAndUpdate(user._id, { lastlogin: user.lastlogin })
 
     const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 })
     console.log(`${user.username}已登录`)
-    resp.status(200).send({
+
+    return resp.status(200).send({
         code: 1000,
         msg: 'success',
         data: {
