@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
+const axios = require('axios');
 
 
 loginRouter.post('/', async (req, resp) => {
@@ -42,6 +43,49 @@ loginRouter.post('/', async (req, resp) => {
             expire: user.lastlogin.getTime() + 60 * 60 * 1000
         }
     })
+})
+
+//api/login 从github跳转到这里
+loginRouter.get('/', async (req, resp) => {
+    const code = req.query.code;
+    // console.log('client_code', code);
+    let ret = await axios({
+        method: 'post',
+        url: 'https://github.com/login/oauth/access_token?' + 
+        `client_id=${process.env.CLIENT_ID}&`+
+        `client_secret=${process.env.CLIENT_SECRET}&`+
+        `code=${code}`+
+        `redirect_uri=${'https://www.ppos.top/'}`,
+        Headers: {Accept : 'application/json'},
+    });
+    let accessToken = ret.data.access_token;
+
+    console.log('accessToken', accessToken);
+
+    const user = await axios({
+        method: 'get',
+        url: `https://api.github.com/user`,
+        headers: {
+          accept: 'application/json',
+          Authorization: `token ${accessToken}`
+        }
+      });
+
+    console.log('github user date', user.data)
+
+    return resp.status(200).send({
+        code: 1000,
+        msg: 'success',
+        data: {
+            userdata: user,
+            token: accessToken,
+            username: user.data.login,
+            name: user.data.name,
+            headUrl: user.data.avatar_url,
+            lastlogin: '',
+            expire: Date.now() + 60 * 60 * 1000
+        }
+    });
 })
 
 
