@@ -45,18 +45,18 @@ loginRouter.post('/', async (req, resp) => {
   })
 })
 
-//api/login 从github跳转到这里
+//api/login 从前端跳转到这里
 loginRouter.get('/', async (req, resp) => {
   const code = req.query.code;
   let url = 'https://github.com/login/oauth/access_token?' +
     `client_id=${process.env.CLIENT_ID}&` +
     `client_secret=${process.env.CLIENT_SECRET}&` +
-    `code=${code}&` +
-    `redirect_uri=https://www.ppos.top`;
+    `code=${code}`;
 
   console.log(url)
 
   let ret = await axios({
+    timeout: 10000,
     method: 'post',
     url: url,
     headers: { Accept: 'application/json' },
@@ -66,9 +66,17 @@ loginRouter.get('/', async (req, resp) => {
 
   let accessToken = ret.data.access_token;
 
-  console.log('accessToken', accessToken);
+  if (!accessToken) {
+    return resp.status(200).send({
+      code: 2000,
+      msg: ret.data.error,
+    });
+  }
+
+  // console.log('accessToken', accessToken);
 
   const user = await axios({
+    timeout: 10000,
     method: 'get',
     url: `https://api.github.com/user`,
     headers: {
