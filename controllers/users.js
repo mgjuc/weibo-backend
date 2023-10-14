@@ -8,7 +8,19 @@ const jwt = require('jsonwebtoken')
 usersRouter.post('/', async (req, resp) => {
     const body = req.body
     // console.log(body)
+    if(!body.username || body.username.length == 0  || !body.username.password || body.username.password == 0){
+        return resp.json({
+            msg: "用户名或密码为空",
+            code: 2000
+        });
+    }
 
+    if(body.username.length > 10 || body.username.password.length >10){
+        return resp.json({
+            msg: "用户名或密码不符要求",
+            code: 2000
+        });
+    }
     const hasuser = await User.findOne({username: body.username})
     if(hasuser) return resp.json({
         msg: "该用户已存在",

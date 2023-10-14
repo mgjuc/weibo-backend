@@ -55,7 +55,8 @@ const errorHandler = (error, request, response, next) => {
             msg: 'Token已过期'
         })
     }
-    next(error)
+    return response.json({ code: 2000, msg: "服务器异常" });
+    // next(error)  //这会暴漏信息
 }
 
 module.exports = {
