@@ -15,7 +15,8 @@ usersRouter.post('/', async (req, resp) => {
         });
     }
     let regName = /^[\u4e00-\u9fa5a-zA-Z0-9]{1,10}$/
-    let regPwd = /^[a-zA-Z0-9@#!*]{6,8}$/ 
+    //密码是前端加密后的值
+    let regPwd = /^[a-z0-9]+$/ 
     if(!regName.test(body.username) || !regPwd.test(body.password)){
         return resp.json({
             msg: "用户名或密码不符要求",
