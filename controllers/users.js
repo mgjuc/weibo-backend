@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 usersRouter.post('/', async (req, resp) => {
     const body = req.body
     // console.log(body)
-    if(!body.username || body.username.length == 0  || !body.username.password || body.username.password == 0){
+    if(!body.username || body.username.length == 0  || !body.password || body.password.length == 0){
         return resp.json({
             msg: "用户名或密码为空",
             code: 2000
@@ -16,7 +16,7 @@ usersRouter.post('/', async (req, resp) => {
     }
     let regName = /^[\u4e00-\u9fa5a-zA-Z0-9]{1,10}$/
     let regPwd = /^[a-zA-Z0-9@#!*]{6,8}$/ 
-    if(!regName.test(body.username) || !regPwd.test(body.username.password)){
+    if(!regName.test(body.username) || !regPwd.test(body.password)){
         return resp.json({
             msg: "用户名或密码不符要求",
             code: 2000
