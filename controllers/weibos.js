@@ -148,13 +148,20 @@ weiboRouter.post('/', async (req, resp, next) => {
  * 搜索内容
  */
 weiboRouter.get('/search/:index/:s', async (req, resp, next) => {
-    Weibo.find({content: { $regex: '.*' + req.params.s + '.*' , $options: 'i'} }).count((err, count) => {
+    if(!req.params.s){
+        resp.json({
+            code: 1000,
+            msg: 'success',
+        })
+    }
+    let querystr = req.params.s.slice(0,100)
+    Weibo.find({content: { $regex: '.*' + querystr + '.*' , $options: 'i'} }).count((err, count) => {
         if (err) {
             next(err)
         }
         else {
             let total = count
-            Weibo.find({content: { $regex: '.*' + req.params.s + '.*' , $options: 'i'} }).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
+            Weibo.find({content: { $regex: '.*' + querystr + '.*' , $options: 'i'} }).sort({ time: -1 })/*.skip(req.params.index * 15).limit(15)*/.then(p => {
                 resp.json({
                     code: 1000,
                     msg: 'success',
