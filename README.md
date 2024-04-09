@@ -12,16 +12,13 @@
 安装：`npm install --save-dev cross-env`
 
 ```json
-//.env
+#.env
 {
-  // ...
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    // ...
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
   },
-  // ...
 }
 ```
 2. VSCode件插：[Restful Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) ：在.rest文件中定义接口测试

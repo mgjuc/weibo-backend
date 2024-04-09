@@ -31,25 +31,25 @@ weiboRouter.get('/', (req, resp, next) => {
  */
 weiboRouter.get('/page/:index', (req, resp, next) => {
     // resp.json(contentlist)
-    let total
     Weibo.find({}).count((err, count) => {
         if (err) {
             next(err)
         }
         else {
-            total = count
+            let total = count
+            Weibo.find({}).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
+                resp.json({
+                    code: 1000,
+                    msg: 'success',
+                    data: {
+                        total,
+                        list: p
+                    }
+                })
+            }).catch(error => next(error))
         }
     })
-    Weibo.find({}).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
-        resp.json({
-            code: 1000,
-            msg: 'success',
-            data: {
-                total,
-                list: p
-            }
-        })
-    }).catch(error => next(error))
+
 })
 
 /**
@@ -142,6 +142,30 @@ weiboRouter.post('/', async (req, resp, next) => {
             next(error) //异常必须要调用next,否则请求没人被处理
             //console.log('save error:', error.message)
         })
+})
+
+/**
+ * 搜索内容
+ */
+weiboRouter.get('/search/:index/:s', async (req, resp, next) => {
+    Weibo.find({content: { $regex: '.*' + req.params.s + '.*' , $options: 'i'} }).count((err, count) => {
+        if (err) {
+            next(err)
+        }
+        else {
+            let total = count
+            Weibo.find({content: { $regex: '.*' + req.params.s + '.*' , $options: 'i'} }).sort({ time: -1 }).skip(req.params.index * 15).limit(15).then(p => {
+                resp.json({
+                    code: 1000,
+                    msg: 'success',
+                    data: {
+                        total,
+                        list: p
+                    }
+                })
+            }).catch(error => next(error))
+        }
+    })
 })
 
 /**

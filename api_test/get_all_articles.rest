@@ -3,6 +3,12 @@
 GET Http://localhost:3001/api/contentlist HTTP/1.1
 
 ###
+GET Http://localhost:3001/api/contentlist/search/1/docker HTTP/1.1
+
+###
+GET Http://localhost:3001/api/contentlist/page/1 HTTP/1.1
+
+###
 GET Http://localhost:3001/api/contentlist/1 HTTP/1.1
 
 
